@@ -1,0 +1,467 @@
+\documentclass[11pt,a4]{article}
+\usepackage{url,graphicx,amssymb,amsfonts}
+\usepackage{amsmath}
+%\usepackage{theorem}
+\newcommand{\ignore}[1]{}
+\usepackage[normalem]{ulem}
+\usepackage{color}
+\usepackage{tikz} 
+\usepackage{amsthm}
+\usepackage{geometry}
+\geometry{letterpaper,top=1.5in,bottom=1.5in,left=1in,right=1in}
+\usepackage{comment}
+\usepackage{upgreek}
+
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\newtheorem{example}{Example}
+\newtheorem{remark}{Remark}
+%\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+
+\newtheorem{observation}{Observation}
+\newtheorem{assumption}{Assumption}
+\newtheorem{fact}{Fact}
+
+
+\newcommand{\change}[1]{\textcolor{red}{#1}}
+\newcommand{\remove}[1]{\textcolor{red}{\sout{#1}}}
+
+\newcommand{\Com}{\mathsf{Com}}
+\newcommand{\Opt}{\mathsf{Opt}}
+
+
+% Mathematical notation
+\newcommand{\NN}        {\mathbb{N}}
+\newcommand{\ZZ}        {\mathbb{Z}}
+\newcommand{\PP}        {\mathbb{P}}
+\newcommand{\FF}        {\mathbb{F}}
+\newcommand{\abs}  [1]  {\left|#1\right|}
+\newcommand{\set}  [1]  {\left\{#1\right\}}
+\newcommand{\floor}[1]  {\lfloor #1\rfloor}
+\newcommand{\ceil} [1]  {\lceil #1\rceil}
+\newcommand{\pr}   [1]  {\Pr \left[#1\right]}
+\newcommand{\poly}      {\operatorname{poly}}
+\newcommand{\polylog}   {\operatorname{polylog}}
+\newcommand{\Oh}        {\mathcal{O}}
+
+% Common mathematical operators
+\newcommand{\iseq}{\stackrel{\scriptscriptstyle ?}{=}}
+\newcommand{\getsu}{\gets_{\scriptscriptstyle \hspace*{-0.7em}u\hspace*{0.1em}}}
+
+% Common symbols for sets
+\newcommand{\AAA}{\mathcal{A}}
+\newcommand{\EEE}{\mathcal{E}}
+\newcommand{\FFF}{\mathcal{F}}
+\newcommand{\CCC}{\mathcal{C}}
+\newcommand{\III}{\mathcal{I}}
+\newcommand{\RRR}{\mathcal{R}}
+\newcommand{\LLL}{\mathcal{L}}
+\newcommand{\KKK}{\mathcal{K}}
+\newcommand{\PPP}{\mathcal{P}}
+\newcommand{\VVV}{\mathcal{V}}
+\newcommand{\SSS}{\mathcal{S}}
+\newcommand{\XXX}{\mathcal{X}}
+\newcommand{\ZZZ}{\mathcal{Z}}
+
+\newcommand{\ADV}  {\mathsf{Adv}}
+\newcommand{\Adv}  {\mathsf{Adv}^{\mathsf{DDH}}_{\group}}
+\newcommand{\DL}  {\mathsf{Dlog}}
+
+
+\newcommand{\param}{\mathsf{param}}
+\newcommand{\Fledger}{\mathcal{G}^{Q}_{\textsc{Ledger}}}
+\newcommand{\Pivote}{\Pi_{\textsc{Vote}}}
+
+\newcommand{\corrupt}  {\mathsf{cor}}
+
+\newcommand{\KeyGen}  {\mathsf{KeyGen}}
+\newcommand{\ck}  {\mathsf{ck}}
+\newcommand{\Ver}  {\mathsf{Ver}}
+\newcommand{\Open}  {\mathsf{Open}}
+\newcommand{\post}  {\textsc{Post}}
+\newcommand{\postN}  {\textsc{PostNotify}}
+
+\newcommand{\honest}  {\mathsf{honest}}
+\newcommand{\data}  {\mathsf{data}}
+\newcommand{\buffer}  {\mathsf{buffer}}
+\newcommand{\online}  {\mathsf{online}}
+\newcommand{\Tally}  {\mathsf{TallyAlg}}
+\newcommand{\leak}  {\textsc{Leak}}
+\newcommand{\reveal}  {\textsc{Reveal}}
+\newcommand{\init}  {\textsc{Init}}
+\newcommand{\initN}  {\textsc{InitNotify}}
+\newcommand{\vote}  {\textsc{Vote}}
+\newcommand{\castN}  {\textsc{CastNotify}}
+\newcommand{\delegate}  {\textsc{Delegate}}
+\newcommand{\tally}  {\textsc{Tally}}
+\newcommand{\tallyN}  {\textsc{TallyNotify}}
+\newcommand{\readT}  {\textsc{ReadTally}}
+\newcommand{\readTR}  {\textsc{ReadTallyReturn}}
+
+
+\newcommand{\VC}{\mathsf{C}}
+\newcommand{\EXP}{\mathsf{E}}
+\newcommand{\Voter}{\mathsf{V}}
+
+\newcommand{\PoK}{\mathsf{PoK}}
+
+\newcommand{\opt}{\mathsf{opt}}
+
+\newcommand{\Enc}{\mathsf{Enc}}
+\newcommand{\Dec}{\mathsf{Dec}}
+\newcommand{\group}{\mathbb{G}}
+\newcommand{\pk}{\mathsf{pk}}
+\newcommand{\sk}{\mathsf{sk}}
+
+\newcommand{\Gen}{\mathsf{Gen}_{\mathsf{gp}}}
+\newcommand{\PC}{\mathsf{PC}}
+
+%%%bingsheng
+\newcommand{\EC}{\mathsf{LE}}
+\newcommand{\nizk}{\mathsf{NIZK}}
+\newcommand{\hash}{\mathsf{hash}}
+\newcommand{\valid}{\mathsf{valid}}
+\newcommand{\invalid}{\mathsf{invalid}}
+
+
+\renewcommand\vec{\mathbf}
+
+\newcommand{\mybox}[5]{
+    \begin{figure}[htpb]
+        \centering
+    \begin{tikzpicture}
+        \node[anchor=text,text width=\columnwidth-1.0cm, draw, rounded corners, line width=1pt, fill=#3, inner sep=5mm] (big) {\\#4};
+        \node[draw, rounded corners, line width=.5pt, fill=#2, anchor=west, xshift=5mm] (small) at (big.north west) {#1};
+    \end{tikzpicture}
+    \caption{#5}
+    \end{figure}
+}
+
+
+\begin{document}
+
+
+\title{Manuscript}
+
+%\titlerunning{}
+
+
+\author{Xun Zhang \quad \quad Bingsheng Zhang \\ 
+Zhejiang University, CHN \\
+22221024@zju.edu.cn \quad bingsheng@zju.edu.cn}
+
+
+
+\maketitle
+
+
+\section{Building Blocks}
+
+
+\subsection{Schnorr signature}
+
+The original Schnorr signature scheme:
+
+\mybox{The Schnorr signature protocol}{white!40}{white!10}{
+
+\textbf{Common parameters}:
+security parameter $\lambda$, a hash function $H:\{0,1\}^* \rightarrow \ZZ_q$, and a message $M \in \{0,1\}^*$.
+
+
+
+\textbf{Protocol}:
+
+\begin{itemize}
+    \item $\Gen(1^\lambda)$: take input as security parameter $\lambda$, and output a group parameter $\param$. 
+    \item The Signer $S$ pick $x\leftarrow \ZZ_q^*$ and set $y:=g^{x}$, and output $(\pk:=(g,y),\sk:=(\pk,x))$. 
+    \item To sign a message $M$, signer $S$ do:
+        \begin{itemize}
+            \item choose a random $k$ from the allowed set.
+            \item output random nonce $r:=g^{k}$.
+            \item calculate the challenge $e:=H(r\vert \vert M)$ and the signature $s:=k-xe$. Then output the signature pair $sig:=(s,e)$.
+        \end{itemize}
+    \item To verify a signature, verifier $V$ do:
+        \begin{itemize}
+            \item calculate the prefix randomness $z:=g^{s}y^{e}$.
+            \item calculate the signature $e':=H(z\vert \vert M)$.
+            \item check if $e=e'$. If it holds, output 1, otherwise output 0.
+        \end{itemize}
+\end{itemize}
+
+
+}{The Schnorr signature protocol \label{fig:alg_unit}}
+
+We propose a batched version of schnorr signature:
+
+
+\mybox{The batched Schnorr signature protocol}{white!40}{white!10}{
+
+\textbf{Common parameters}:
+security parameter $\lambda$, a hash function $H:\{0,1\}^* \rightarrow \ZZ_q$, the number of the signer $n$. The signer set $\textbf{S}$, $|\textbf{S}| = n$.
+and a message set $\textbf{M}$, $|\textbf{M}|=n$,$M_i \in \{0,1\}^*$.
+
+
+\textbf{Protocol:}
+
+
+\begin{itemize}
+    \item $\Gen(1^\lambda)$: take input as security parameter $\lambda$, and output a group parameter $\param$.
+    \item The Signer set \textbf{S}, for $i = 1,\ldots, n$,  every signer $S_i$ pick $x_i\leftarrow \ZZ_q^*$ and set $y_i:=g^{x_i}$, and output $(\pk:=(g,y),\sk:=(\pk,x_i))$
+    \item  For $i = 1,\ldots, n$,  every signer $S_i$ do:
+        \begin{itemize}
+            \item choose a random $k_i$ from the allowed set.
+            \item output random nonce $r_i:=g^{k_i}$.
+            \item calculate the challenge $e_i:=H(r_i\vert \vert M_i)$ and the signature $s_i:=k_i-x_ie_i$. Then output the signature pair $sig:=(s_i,e_i)$.
+        \end{itemize}
+    \item To verify a signature, verifier $V$ do:
+     \begin{itemize}
+            \item For $i = 1,\ldots, n$, calculate the prefix randomness $z_i:=g^{s_i}y_i^{e_i}$.
+            \item For $i = 1,\ldots, n$, calculate the signature $e'_i:=H(z_i\vert \vert M_i)$.
+            \item For $i = 1,\ldots, n$, check if $e_i=e'_i$. If it holds, output 1, otherwise output 0.
+        \end{itemize}
+\end{itemize}
+
+
+}{The batched Schnorr signature protocol \label{fig:alg_unit}}
+
+
+\subsection{Commitment scheme to $\mathbb{Z}_q$-vectors}
+
+Commitment scheme from [DRZ20], use structured pedersen commitment key.
+The commitment scheme is in Fig. 3.
+
+\mybox{Commitment scheme}{white!40}{white!10}{
+
+\textbf{Common parameters:}
+$(q,\mathbb{G}_1,\mathbb{G}_2,\mathbb{G}_T,e,g,h)$ be a bilinear group. length of vector $n$.
+
+\begin{itemize}
+    \item $\Gen(1^\lambda)$: take input as security parameter $\lambda$, and outputs a global parameter $\param$.
+    \item $\mathsf{Gen}_{\mathsf{ped}}(\param):$ first samples a $l$-length vector $\dot{\textbf{a}}:=(\dot{a}_1, \ldots, \dot{a}_l) \leftarrow {\ZZ^l_q}$ where $l=\log(n+1)$. Let $\textbf{a}:=(a_1, \ldots, a_n)\leftarrow {\ZZ^{n+1}_q}$ be defined as $a_j=\prod_{i=1}^{l}\dot{a}_i^{b_{ji}}$, where $(b_{j1}, \ldots, b_{jl})$ is the binary representation of $j$.
+    
+    Outputs commitment key $ck:=(g^{a_1}, \ldots, g^{a_n})$ and verification key $vk:=(H^{\dot{a_1}}, \ldots, H^{\dot{a_l}})$.
+    \item $\Com_{\mathsf{ck}}(\textbf{x};\gamma)$: outputs a commitment $c:=g^{<\textbf{a},(\textbf{x}||y)>} =\prod_{i=1}^{n+1}(g^{a_i})^{x_i\vert \vert y}$
+    \item $\Open_{\mathsf{ck}}(c):$ outputs $x \in \ZZ_q^n$, $\gamma \in \ZZ_q$ such that $c:=g^{<\textbf{a},(\textbf{x}||y)>} =\prod_{i=1}^{n+1}(g^{a_i})^{x_i\vert \vert y}$.
+\end{itemize}
+
+}{Commitment scheme \label{fig:alg_unit}}
+
+
+
+\begin{comment}
+\mybox{Commitment scheme}{white!40}{white!10}{
+Common parameters: $(q,\mathbb{G}_1,\mathbb{G}_2,\mathbb{G}_T,e,g,h)$ be a bilinear group. length of vector $n$.
+
+\begin{itemize}
+    \item Setup. Let $\dot{\textbf{a}}:=(\dot{a}_1, \ldots, \dot{a}_l) \leftarrow {\ZZ^l_q}$ where $l=\log(n+1)$. Let $\textbf{a}:=(a_1, \ldots, a_n)\leftarrow {\ZZ^{n+1}_q}$ be defined as $a_j=\prod_{i=1}^{l}\dot{a}_i^{b_{ji}}$, where $(b_{j1}, \ldots, b_{jl})$ is the binary representation of $j$. Output $(\textbf{[a]},H^{\dot{\textbf{a}}})$, where $\textbf{[a]}=g^{\textbf{a}} \in \group_1^{n+1}$ is the structured commitment key, and $H^{\dot{\textbf{a}}}\in\group_2^{l}$ is the verification key.
+    \item Commit. Sample $\gamma \leftarrow _R \ZZ_q$ and define
+    $\Com_{\textbf{[a]}}(\textbf{x};\gamma):=g^{<\textbf{a},(\textbf{x}||y)>} =\prod_{i=1}^{n+1}(g^{a_i})^{x_i\vert \vert y}$ 
+\end{itemize}
+
+}{Commitment scheme \label{fig:alg_unit}}
+\end{comment}
+The above scheme is perfectly hiding and computationally binding under the DLOG assumption [DRZ20].
+
+\subsection{$\sum$-Protocol for opening a linear form}
+
+We consider the following relation:
+\begin{align*}
+    \RRR=(P\in\group,L\in\LLL(\ZZ_q^n),y\in\ZZ_q;\textbf{x}\in\ZZ_q^n,\gamma \in \ZZ_q):\\
+    P=\Com_{\mathsf{ck}}(\textbf{x};\gamma) \enspace \land \enspace L(\textbf{x})=y
+\end{align*}
+
+The protocol is in Fig. 4.
+\mybox{$\sum$-Protocol $\prod_0$ for opening a linear form}{white!40}{white!10}{
+
+
+\textbf{Parameters:}
+
+Common parameters:
+$P\in\group,L\in\LLL(\ZZ_q^n),y\in\ZZ_q,P=\Com_{\textbf{[a]}}(\textbf{x};\gamma),L(\textbf{x})=y$
+
+P's inputs:
+$\textbf{x}\in\ZZ_q^n,\gamma \in \ZZ_q$.
+
+\textbf{Protocol:}
+
+1. $P$ samples $r \leftarrow _R \ZZ_q^n$ and $\rho \leftarrow _R \ZZ_q$, computes $A=\Com_{\mathsf{ck}}(\textbf{r};\rho)$, $t=L(\textbf{r})$ and sends $A,t$ to $V$.
+
+2. $V$ samples $c \leftarrow _R \ZZ_q$ and sends to $P$.
+
+3. $P$ computes $\textbf{z} = c\textbf{x}+\textbf{r}$ and $\phi=c\gamma+\rho$ and sends $\textbf{z},\phi$ to $V$.
+
+4. $V$ checks if $\Com_{\mathsf{ck}}(\textbf{z};\phi)=AP^c$ and $L(\textbf{z}) = cy+t$, outputs 1 if it holds, outputs 0 otherwise.
+
+
+
+}{$\sum$-Protocol $\prod_0$ for opening a linear form \label{fig:alg_unit}}
+
+
+\subsection{Opening a Committed Linear Form}
+
+In above protocol, the communication complexity as well as the verifier complexity is linear due to the last message sent by the prover and the last check performed by the verifier. To improve both complexities, we replace the message sent in the last step with a proof of knowledge.
+
+Defined a new relation $\RRR_{CLF}$ to capture that, where the new linear form $L$ is defined as $L(\textbf{z},\phi) := L(\textbf{z})$ and the message the prover sends is exactly the witness in this relation:
+
+\begin{align*}
+    \RRR_{CLF}=(P\in\group,Q\in\group,y\in\ZZ_q;\textbf{x}\in\ZZ_q^n,L\in\LLL(\ZZ_q^n)):\\
+    P=\Com_{\mathsf{ck}}(\textbf{x})\land Q=\Com_{\textbf{[a]}}(L) \land L(\textbf{x})=y
+\end{align*}
+
+
+
+
+[DGJ24] improved the protocol for opening a committed linear form, switch the above relation to the reverse linear form relation:
+\begin{align*}
+    \RRR_{CLF_rev}=(P\in\group,Q\in\group,y\in\ZZ_q;\textbf{x}\in\ZZ_q^n,L\in\LLL(\ZZ_q^n)):\\
+    P=\Com_{\mathsf{ck}}(\textbf{x}) \land Q=\Com_{\mathsf{ck}}(rev(L)) \land L(\textbf{x})=y
+\end{align*}
+
+where $rev(L)$ is the reverse of the original $L$. The new relation corresponds to showing opening of a public commitment $P$ and a public value $y$, obtained by operating a linear form $L$ on a secret $\ZZ_q^n$ vector $\textbf{x}$, where we also have a commitment to the reverse of linear form $L$ which is represented as a vector.
+
+The whole protocol is in Fig. 5.
+\mybox{Protocol $\prod_1$ for Opening Committed Linear Form (reverse)}{white!40}{white!10}{
+
+\textbf{Parameters:}
+
+Common parameters:
+$P\in\group,Q\in\group,y\in\ZZ_q;H^{\dot{\textbf{a}}}\in\group^l$
+\begin{itemize}
+    \item $P=\Com_{\mathsf{ck}}(\textbf{x}),Q=\Com_{\mathsf{ck}}(rev(L)),L(\textbf{x})=y$,
+    \item $n=2^l,\dot{\textbf{a}}=(\dot{a}_1, \ldots, \dot{a}_l), \textbf{a}=(\prod_{i=1}^{l}\dot{a_i}^{b_i})_{b_i\in\{0,1\}}$
+\end{itemize}
+P's inputs:
+$(ck\in\group^n,\textbf{x}\in\ZZ_q^n,L\in\LLL(\ZZ_q^n))$
+
+
+\textbf{Protocol:}
+
+1. Define $\textbf{B}\in\ZZ_q^n$ as $B=rev(L)$, Let $\textbf{x}(U)$ be a polynomial of degree $(n-1)$ defined with coefficient vector $\textbf{x}=(x_1, \ldots, x_n)$, such that $\textbf{x}(U)=\sum_{i=0}^{n-1}x_{i+1}U^i$. Similarly, we define the polynomial $\textbf{B}(U)$ of degree $(n-1)$ for the vector $\textbf{B}$.
+
+2. $P$ defines a $(2n-2)$ degree polynomial $p$ by:
+\begin{align*}
+    \textbf{p}(U)=\textbf{x}(U)\cdot\textbf{B}(U)=\sum_{i,j}x_{i+1}B_{j+1}U^{i+j}
+\end{align*}
+
+then $P$ parses the computed polynomial as:
+\begin{align*}
+    \textbf{p}(U)=\textbf{p}_L(U)\cdot U^{-1}+y\cdot U^{n-1}+\textbf{p}_R(U)\cdot U^{n}
+\end{align*}
+where $\textbf{p}_L$ is a polynomial of degree $(n-1)$ and $\textbf{p}_R$ is a polynomial of degree $(n-2)$.
+
+3. $P$ computes $A_1=\Com_{\mathsf{ck}}(\textbf{p}_L)$ and $A_2=\Com_{\mathsf{ck}}(\textbf{p}_R)$ and sends to $V$.
+
+4. $V$ samples $c \leftarrow _R \ZZ_q$ and sends to $P$.
+
+5. $P$ computes the evaluations of the polynomials on the random challenge $c$ as follows, and then sends $z1, z2, z3$ and $z4$ to $V$: $z1 = \textbf{x}(c), z2 = \textbf{B}(c), z3 = \textbf{p}_L(c), z4 = \textbf{p}_R(c)$
+
+6. $V$ checks if following holds:
+\begin{align*}
+    z_3\cdot c^{-1} + y\cdot c^{n-1} + z_4\cdot c^n = z_1 \cdot z_2
+\end{align*}
+
+7. $V$ samples $t \leftarrow _R \ZZ_q$ ans sends to $P$.
+
+8. $P$ sets $w = x + t \cdot B + t^2 \cdot \textbf{p}_L + t^3 \cdot \textbf{p}_R$ and sends $w$ to $V$.
+
+9. $P$ and $V$ both compute the following :
+\begin{align*}
+    R = P\cdot Q^t \cdot A_1^{t^2}\cdot A_2^{t^3}, z=z_1+t\cdot z_2 +t^2\cdot z_3+t^3\cdot z_4
+\end{align*}
+
+10. $V$ outputs 1 if for $\textbf{c}^{n-1}=(1, \ldots, c^{n-1})$ the following relation holds, and outputs 0 otherwise:
+\begin{align*}
+    \Com_{\mathsf{ck}}(\textbf{w})=R \enspace \land \enspace <\textbf{w}, \textbf{c}^{n-1}>=z
+\end{align*}
+
+}{Protocol $\prod_1$ for Opening Committed Linear Form (reverse) \label{fig:alg_unit}}
+
+
+To remove the message $w$ sent by $P$, we need to prove the following relation:
+
+\begin{align*}
+    \RRR=(P\in\group,y\in\ZZ_q,L\in\LLL(\ZZ_q^n);\textbf{x}\in\ZZ_q^n):\\
+    P=\Com_{\mathsf{ck}}(\textbf{x})\enspace \land \enspace L(\textbf{x})=y
+\end{align*}
+
+and the check computed by the verifier in step 10 corresponds to ensuring that $(R,\textbf{c}^{n-1},z;\textbf{w}) \in \RRR$.
+
+The following table $\textbf{L}$ represents the left half of a vector, while $\textbf{R}$ represents the right half.
+
+So here is another protocol to prove the relation $\RRR$ in Fig. 6.
+
+\mybox{Protocol $\prod_2$ for $(R,\textbf{c}^{n-1},z;\textbf{w}) \in \RRR$}{white!40}{white!10}{
+
+\textbf{Parameters:}
+
+Common parameters:
+$P\in\group,Q\in\group,y\in\ZZ_q;H^{\dot{\textbf{a}}}\in\group^l$
+\begin{itemize}
+    \item $R=\Com_{\mathsf{ck}}(\textbf{w}),L_c=\textbf{c}^{n-1}=(1, \ldots, c^{n-1}),z=L_c(\textbf{w})$,
+    \item $n=2^l,\dot{\textbf{a}}=(\dot{a}_1, \ldots, \dot{a}_l), \textbf{a}=(\prod_{i=1}^{l}\dot{a_i}^{b_i})_{b_i\in\{0,1\}}$
+\end{itemize}
+P's inputs:
+$(ck\in\group^n,\textbf{w}\in\ZZ_q^n,L_c=\textbf{c}^{n-1}\in\ZZ_q^n)$
+
+\textbf{Protocol:}
+
+1. $P$ computes $A_1=\Com_{\mathsf{ck}_L}(\textbf{w}_L)$, $A_2=\Com_{\mathsf{ck}_L}(\textbf{w}_R)$ and $z'=<\textbf{w}_L,(L_c)_L>=<\textbf{w}_L,\textbf{c}^{(n-1)/2}>$ sends to $V$.
+
+2. $V$ checks if 
+\begin{align*}
+    e\left(\frac{R}{A_1},g\right) = e\left(A_2, g^{\dot{a}_l}\right)
+\end{align*}
+
+3. $V$ samples $s \leftarrow _R \ZZ_q$ ans sends to $P$.
+
+4. $P$ sets $\textbf{w}'= \textbf{w}_L + s \cdot \textbf{w}_R$, $L'_c = s(L_c)_L + (L_c)_R = (s + c^{n/2} )c^{n/2-1}$ and implicitly sets $\dot{\textbf{a}}'=(\dot{a_1}, \ldots ,\dot{a_{l-1}})$ and $\textbf{a}' = \textbf{a}_L$. So the new commitment key $ck':=g^{\textbf{a}_L}$. 
+
+5. $P$ and $V$ both compute the following :
+\begin{align*}
+    R'=A_1 A^s_2, \enspace d = c^{n/2} \cdot z'+ s\cdot z+ s^2 \cdot c^{-n/2}\cdot(z-z')
+\end{align*}
+
+6. If $\textbf{w}' \notin \ZZ_q^2$, repeat the step1 to step5 with new parameter $\Com_{\mathsf{ck}'}(\textbf{w'})=P'$ and $\enspace <L'_c,\textbf{x}'>=d$
+
+7. If $\textbf{w}' \in \ZZ_q^2$:
+\begin{itemize}
+    \item $P$ sends $\textbf{w}',L'_c$ to $V$.
+    \item $V$ outputs 1 if the following holds, and outputs 0 otherwise:
+    \begin{align*}
+        \Com_{\mathsf{ck}'}(\textbf{w'})=P' \enspace \land \enspace <L'_c,\textbf{x}'>=d
+    \end{align*}
+\end{itemize}
+
+}{Protocol $\prod_2$ for $(R,\textbf{c}^{n-1},z;\textbf{w}) \in \RRR$ \label{fig:alg_unit}}
+
+
+
+\section{Basic Idea discussion}
+
+\begin{itemize}
+    \item We noticed that in batched Schnorr signature scheme, there exists a linear combination if all signers shares the same challenge. 
+
+    For examples, every signer gets the challenge $e:=H(r_1\vert \vert r_2 \vert \vert \ldots \vert \vert r_n \vert \vert M_1 \vert \vert M_2 \vert \vert \ldots \vert \vert M_n)$. And they can compute the signature vector $\textbf{s} = \textbf{k}-e\textbf{x}$. And this linear relation between three vectors can be embedded into the step3 in $\prod_0$. It seems like we can use $\prod_0$ and its succinct version($\prod_1$ with $\prod_2$) to prove that.
+
+    However, this approach requires prover to know every signer's private key $x_i$, so it is not practical.
+    \item So we propose a batched Schnorr signature scheme with individual challenge $e_i$ for every signer. And the core part of the verification is to check if $z_i=g^{s_i}y_i^{e_i}$ holds, for the challenge $e_i$ can be calculated first.
+
+    To commit the group element, a commitment scheme uses pairing may be helpful[AFGHO10]. 
+
+    The pairing is defined as: $e: \group \times \hat{\group} \rightarrow \mathcal{T}$
+    To commit the a vector of group element $(c_1, \ldots, c_m)$, the commitment scheme specifies non-trivial group elements $(v, u_1, \ldots, u_m) \in \hat{\group}$ and a random $t \in \group$.
+    The commitment $C=e(t,v)\prod_{j=1}^me(c_j,u_j)$.
+
+
+    $\Com_{v,u}(\textbf{z})=\Com_{v,u}(g^\textbf{s}\textbf{y}^\textbf{e})$?
+
+\end{itemize}
+
+
+\end{document}
+
+

@@ -1,0 +1,37 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{hyperref}
+\title{Questions}
+
+\author{Xun Zhang \quad \quad Bingsheng Zhang \\ 
+Zhejiang University, CHN \\
+22221024@zju.edu.cn \quad bingsheng@zju.edu.cn}
+\date{March 19, 2024}
+
+\begin{document}
+
+\maketitle
+
+\section{Questions about zkBridge}
+
+\begin{itemize}
+    \item Q: Does blkH\_r-1 contain a Merkle tree of the public keys used to verify the signatures in the proof for blkH\_r? This would allow us to keep everything succinct.
+    
+    A: \textbf{YES}(according to Cosmos code). 
+    
+    \textit{"In Cosmos, each block header contains about 128 EdDSA signatures (on Curve25519), Merkle roots for transactions and states, along with other metadata, where 32 top signatures are required to achieve super-majority stakes."}(sec. 6.1)
+
+    See it in tendermint pkg: \href{https://pkg.go.dev/github.com/tendermint/tendermint/types#Header.NextValidatorsHash}{code}
+
+
+    $\mathsf{ValidatorsHash \quad \quad tmbytes.HexBytes \quad  `json:"validators\_hash"`   \quad validators for the current block}
+    \\
+	\mathsf{NextValidatorsHash \quad \quad tmbytes.HexBytes \quad `json:"next\_validators_hash"`\quad validators for the next block}$
+
+    \item Q: Should we reuse existing building blocks or do we want to design our own scheme?
+
+    A: I think it depends on the blockchains we want to bridge. Since there are many blockchains use diverse signature schemes, the performance requirements for the ZK-SNARK are also different. Even in some scenarios, such as bridging from Ethereum to other EVM-compatible blockchains, there is no need to use zksnark(see sec. 6.4).
+\end{itemize}
+        
+
+\end{document}

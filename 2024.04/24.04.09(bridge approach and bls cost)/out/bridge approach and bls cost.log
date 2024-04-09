@@ -1,0 +1,218 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2024.1.23)  9 APR 2024 16:55
+entering extended mode
+ restricted \write18 enabled.
+ file:line:error style messages enabled.
+ %&-line parsing enabled.
+**"bridge approach and bls cost.tex"
+(./bridge approach and bls cost.tex
+LaTeX2e <2022-11-01> patch level 1
+L3 programming layer <2023-02-22>
+(c:/texlive/2023/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2022/07/02 v1.4n Standard LaTeX document class
+(c:/texlive/2023/texmf-dist/tex/latex/base/size10.clo
+File: size10.clo 2022/07/02 v1.4n Standard LaTeX file (size option)
+)
+\c@part=\count185
+\c@section=\count186
+\c@subsection=\count187
+\c@subsubsection=\count188
+\c@paragraph=\count189
+\c@subparagraph=\count190
+\c@figure=\count191
+\c@table=\count192
+\abovecaptionskip=\skip48
+\belowcaptionskip=\skip49
+\bibindent=\dimen140
+)
+(c:/texlive/2023/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2021/09/16 v1.2d Enhanced LaTeX Graphics (DPC,SPQR)
+
+(c:/texlive/2023/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
+\KV@toks@=\toks16
+)
+(c:/texlive/2023/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2022/03/10 v1.4e Standard LaTeX Graphics (DPC,SPQR)
+
+(c:/texlive/2023/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 2021/08/11 v1.11 sin cos tan (DPC)
+)
+(c:/texlive/2023/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 107.
+
+(c:/texlive/2023/texmf-dist/tex/latex/graphics-def/pdftex.def
+File: pdftex.def 2022/09/22 v1.2b Graphics/color driver for pdftex
+))
+\Gin@req@height=\dimen141
+\Gin@req@width=\dimen142
+)
+(c:/texlive/2023/texmf-dist/tex/latex/float/float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count193
+\float@exts=\toks17
+\float@box=\box51
+\@float@everytoks=\toks18
+\@floatcapt=\box52
+)
+(c:/texlive/2023/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
+File: l3backend-pdftex.def 2023-01-16 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count194
+\l__pdf_internal_box=\box53
+)
+(D:/bridge-manuscript/2024.04/24.04.09(bridge approach and bls cost)/out/bridge
+ approach and bls cost.aux)
+\openout1 = `"bridge approach and bls cost.aux"'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+
+(c:/texlive/2023/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count195
+\scratchdimen=\dimen143
+\scratchbox=\box54
+\nofMPsegments=\count196
+\nofMParguments=\count197
+\everyMPshowfont=\toks19
+\MPscratchCnt=\count198
+\MPscratchDim=\dimen144
+\MPnumerator=\count199
+\makeMPintoPDFobject=\count266
+\everyMPtoPDFconversion=\toks20
+) (c:/texlive/2023/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
+85.
+
+(c:/texlive/2023/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
+e
+))
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 15.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 15.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 15.
+ [1
+
+{c:/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{c:/texlive/2023/
+texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}]
+<Z0J8h33.png, id=12, 1660.2025pt x 825.0825pt>
+File: Z0J8h33.png Graphic file (type png)
+<use Z0J8h33.png>
+Package pdftex.def Info: Z0J8h33.png  used on input line 43.
+(pdftex.def)             Requested size: 319.99997pt x 159.03345pt.
+ [2 <./Z0J8h33.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 68--69
+
+ []
+
+<SP1.png, id=18, 1199.23032pt x 671.50874pt>
+File: SP1.png Graphic file (type png)
+<use SP1.png>
+Package pdftex.def Info: SP1.png  used on input line 70.
+(pdftex.def)             Requested size: 345.0pt x 193.1751pt.
+
+Overfull \hbox (15.0pt too wide) in paragraph at lines 70--71
+[][] 
+ []
+
+[3 <./SP1.png>]
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 83.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 83.
+<ZKIBC2.png, id=25, 1215.03937pt x 892.83563pt>
+File: ZKIBC2.png Graphic file (type png)
+<use ZKIBC2.png>
+Package pdftex.def Info: ZKIBC2.png  used on input line 104.
+(pdftex.def)             Requested size: 345.0pt x 253.50714pt.
+
+Overfull \hbox (15.0pt too wide) in paragraph at lines 104--105
+[][] 
+ []
+
+[4]
+<ZKIBC_merkle.png, id=31, 1047.915pt x 887.56593pt>
+File: ZKIBC_merkle.png Graphic file (type png)
+<use ZKIBC_merkle.png>
+Package pdftex.def Info: ZKIBC_merkle.png  used on input line 110.
+(pdftex.def)             Requested size: 345.0pt x 292.20695pt.
+
+Overfull \hbox (15.0pt too wide) in paragraph at lines 110--111
+[][] 
+ []
+
+[5 <./ZKIBC2.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 112--113
+
+ []
+
+<ZKIBC_prover.png, id=36, 658.71094pt x 948.54375pt>
+File: ZKIBC_prover.png Graphic file (type png)
+<use ZKIBC_prover.png>
+Package pdftex.def Info: ZKIBC_prover.png  used on input line 122.
+(pdftex.def)             Requested size: 345.0pt x 496.80609pt.
+
+Overfull \hbox (15.0pt too wide) in paragraph at lines 122--123
+[][] 
+ []
+
+[6 <./ZKIBC_merkle.png>] [7 <./ZKIBC_prover.png>]
+LaTeX Font Info:    Trying to load font information for OMS+cmr on input line 1
+32.
+
+(c:/texlive/2023/texmf-dist/tex/latex/base/omscmr.fd
+File: omscmr.fd 2022/07/10 v2.5l Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 132.
+
+Overfull \hbox (72.8858pt too wide) in paragraph at lines 139--148
+ [][] 
+ []
+
+[8]
+(D:/bridge-manuscript/2024.04/24.04.09(bridge approach and bls cost)/out/bridge
+ approach and bls cost.aux) ) 
+Here is how much of TeX's memory you used:
+ 1443 strings out of 477932
+ 24336 string characters out of 5838032
+ 1858382 words of memory out of 5000000
+ 21672 multiletter control sequences out of 15000+600000
+ 517582 words of font info for 49 fonts, out of 8000000 for 9000
+ 36 hyphenation exceptions out of 8191
+ 57i,10n,62p,575b,255s stack positions out of 10000i,1000n,20000p,200000b,200000s
+<c:/texlive/2023/texmf-dist/fonts/type1/public/ams
+fonts/cm/cmbx10.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmbx12.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbxti10.
+pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/te
+xlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><c:/texlive/2023
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb><c:/texlive/2023/texmf-dis
+t/fonts/type1/public/amsfonts/cm/cmr7.pfb><c:/texlive/2023/texmf-dist/fonts/typ
+e1/public/amsfonts/cm/cmsy10.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public
+/amsfonts/cm/cmti10.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/cm-super
+/sfrm1000.pfb>
+Output written on "D:/bridge-manuscript/2024.04/24.04.09(bridge approach and bl
+s cost)/out/bridge approach and bls cost.pdf" (8 pages, 1013654 bytes).
+PDF statistics:
+ 93 PDF objects out of 1000 (max. 8388607)
+ 52 compressed objects within 1 object stream
+ 0 named destinations out of 1000 (max. 500000)
+ 26 words of extra memory for PDF output out of 10000 (max. 10000000)
+

@@ -1,0 +1,260 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+
+\title{24.05.21 SNARK-based ATMS}
+\author{Xun Zhang \quad \quad Bingsheng Zhang \\ 
+Zhejiang University, CHN \\
+22221024@zju.edu.cn \quad bingsheng@zju.edu.cn}
+
+\date{May 21 2024}
+\begin{document}
+
+\maketitle
+
+\section{SNARK-based ATMS}
+
+
+\subsection{Comparison between Mithril and ATMS}
+
+Use Code from Inigo.
+
+
+We provide a quick comparison to see what are the differences and Similarities between Mithril
+and implemented ATMS(SNARK version).
+
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{p{4cm}|p{3cm}|p{4cm}}    \hline
+         &Mithril & ATMS(SNARK version) \\ \hline
+         core signature scheme& BLS &Schnorr \\ \hline
+         threshold& stake sum & valid signature num \\ \hline
+         VK commitment& Merkle tree& Hash \\ \hline
+         hash function& blake2b & Rescue \\ \hline
+         eligibility check & Yes &No \\ \hline
+         curve& bls12-381 &bls12-381 \\ \hline
+    \end{tabular}
+    \caption{Mithril and ATMS Comparison}
+    \label{tab:my_label}
+\end{table}
+
+
+\subsection{Workflow of SNARK-based ATMS}
+Assume that there exists $n$ committee members, and the required threshold is $t$.
+
+\textbf{Step 1.} Each individual signer proceeds the [$keygen$]
+The function generates $(sk_i, pk_i)$ as the keypair for the $signer_i$.
+
+\textbf{Step 2.} Signers share their public keys with the registration authority:
+\begin{itemize}
+    \item The role of the registration authority is simply to commit to all public keys of the committee in a Merkle Tree (MT).
+    \item The Registration Authority can be a Plutus script, a trusted party, or be distributed amongst the committee members.
+    \item The reason why it needs to be 'trusted' is because it can exclude certain participants, or include several keys it owns.
+\end{itemize}
+
+  
+\textbf{Step 3.} Once all registration requests have been submitted with their corresponding public keys, $pks = [pk_1, ..., pk_n]$, the aggregated public key is created $avk = H(pk_1, \ldots, pk_n)$.
+
+\textbf{Step 4.} Individual parties generate their single signature with [$sign$] and send the signature to aggregator (does not need to be trusted).
+Individual signatures should be verifiable with [$verify$]
+
+\textbf{Step 5.} Aggregator receives the single signatures. It collects at least threshold-many valid signatures as the aggregate signature.
+
+\textbf{Step 6.} Once the aggregator receives at least $t$ valid signatures $sig_1, ..., sig_t$ it proceeds to generate the SNARK. In particular, it proves that:
+
+\begin{itemize}
+    \item There exists $t'$ valid and distinct signatures, $sig_1, ..., sig_t$ for public keys $pk_1, ..., pk_t$ and message $msg$.
+    \item The hash of all $t$ public keys, together with some other set of keys, results in the corresponding $avk$.
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Benchmark of SNARK-based ATMS}
+
+
+
+We bench the SNARK-based ATMS by Criterion crate.
+
+k represents the degree of polynomial(which means the number of rows is about $2^k$). n represents the number of parties. And th represents the threshold of signatures.
+
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{c|c} \hline
+        Setting & Proving Time \\ \hline
+         k = 14, n = 6, th = 3& 1.2579s  \\ \hline
+         k = 15, n = 9, th = 6& 2.3281s \\ \hline
+         k = 15, n = 9, th = 8& 2.3310s \\ \hline
+         k = 16, n = 15, th = 15& 4.3034s \\ \hline
+         k = 16, n = 21, th = 14& 4.3301s \\ \hline
+         k = 17, n = 21, th = 17& 8.0298s \\ \hline
+         k = 17, n = 42, th = 28& 8.1542s \\ \hline
+    \end{tabular}
+    \caption{Proving time of ATMS}
+    \label{tab:my_label}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{c|c} \hline
+        Setting & Proving Time \\ \hline
+         k = 19, n = 102, th = 72& 28.761s  \\ \hline
+         k = 22, n = 2001, th = 1602 & $\approx$ 200s \\ \hline
+    \end{tabular}
+    \caption{Proving Time of Real Situations}
+    \label{tab:my_label}
+\end{table}
+
+
+Note that the benchmark of last setting(k = 22, n = 2001, th = 1602) is computed by hand, since my computer does not support the long running time of function.
+
+
+
+
+\section{Rescue and Poseidon}
+
+Since Mithril is implemented with Poseidon and SNARK-based ATMS is on Rescue, it is necessary to compare Poseidon and Rescue.
+
+The Poseidon functions implemented in halo2 and halo2-lib are both \textbf{Poseidon128}, which means it has a \textbf{128-bit} security level.
+
+We provide a quick comparison between Poseidon128 and Rescue in implementation:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{c|c|c} \hline
+         &Poseidon128& Rescue  \\ \hline
+         security level& 128bit&128bit \\ \hline
+         S-box & $x^5$& $x^5$\&$x^{1/5}$ \\ \hline
+         Support curve& BN/BLS/Ed& BN/BLS/Ed \\ \hline
+         Width&  3,9,12 &4 \\ \hline
+         Capacity& 1 & 1 \\ \hline
+         $R_f$ &8 & 12 \\ \hline
+         $R_p$&57& - \\ \hline
+    \end{tabular}
+    \caption{Comparison of Poseidon128 and Rescue}
+    \label{tab:my_label}
+\end{table}
+
+
+
+\subsection{Performance}
+
+The performance we benched are in quite different settings, is for reference only. 
+
+
+\subsection{Poseidon Benchmark}
+
+The field of halo2 official Poseidon is \textbf{pallas/vesta}.
+
+And the \textbf{rate = width - 1}. All the results only do \textbf{one-time} permutation, because the input length is strictly equals to the rate.
+
+It should be noted that the halo2 official implementation used a Blake2b transcript and run a real workflow(including generating PK/VK, proving and verification). So the time it cost may be longer than Rescue.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{c|c|c} \hline
+         &Proving & Verification  \\ \hline
+         width = 3& 58.371 ms & 3.3824 ms \\ \hline
+         width = 9& 106.29 ms & 3.7644 ms \\ \hline
+         width = 12& 139.08 ms& 3.9400 ms \\ \hline
+    \end{tabular}
+    \caption{Halo2 Official Poseidon Benchmark}
+    \label{tab:my_label}
+\end{table}
+
+
+The halo2-lib crate uses a optimized Poseidon implementation described in Supplementary Material Section B of https://eprint.iacr.org/2019/458.pdf, aka Poseidon paper(full version). This involves some further computation of optimized constants and sparse MDS matrices beyond what the Scroll PoseidonSpec generates.
+
+The rate is fixed to \textbf{2}, and the capacity is fixed to \textbf{1}.
+Which means that the arity(in the context of tree hashing) of this function is \textbf{2}.
+
+And the field of halo2-lib Poseidon is \textbf{BN254}.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{c|c|c|c|c} \hline
+         &Generate VK& Generate PK & Proving &Verification \\ \hline
+    maxlen = 0  & 59.107ms& 12.434ms & 162.234ms& 2.584ms \\ \hline
+    maxlen = 2*2 &81.841ms& 21.711ms& 293.331ms& 3.925ms \\ \hline
+    maxlen = 2*5 &127.393ms& 25.423ms& 370.451ms& 4.608ms \\ \hline
+    maxlen = 2*2+1&94.544ms& 24.769ms& 312.785ms& 4.069ms \\ \hline
+    maxlen = 2*5+1&125.951ms& 41.236ms& 349.318ms& 4.319ms \\ \hline
+    \end{tabular}
+    \caption{Halo2-lib Poseidon Benchmark}
+    \label{tab:my_label}
+\end{table}
+
+The halo2-lib crate uses a $\mathbf{base\_test().k().bench\_builder()}$ method to bench the function. It runs keygen, real prover, and verifier by providing a closure that uses a 'builder' and 'RangeChip'.
+
+
+
+We can do very rough calculation to see the cost of one permutation under the setting \textbf{rate = 2}.
+
+The proving time of a permutation is about:
+\begin{itemize}
+    \item $(370.451ms - 293.331ms) / (5 - 2) = 25.7066ms$ or
+    \item $(312.785ms - 293.331ms) / 1 = 19.454ms$
+\end{itemize}
+
+
+\subsection{Rescue Benchmark}
+
+The benchmark of Rescue is running under follwing settings:
+
+\begin{itemize}
+    \item \textbf{Curve}: BLS12-381
+    \item \textbf{RATE}: 3
+\end{itemize}
+
+
+\textbf{Note}: this benchmark is using $\mathbf{MockProver::run}$ method, with parameter \textbf{k = 10}. Thus the real proving time of Rescue hash function will be \textbf{much lower}.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{c|c|c|c|c} \hline
+         iteration& width & operation & total time & time per permutation \\ \hline
+         4& 4& 12-to-3 &36.269ms & 2.2668ms \\ \hline
+    \end{tabular}
+    \caption{Rescue Hash Benchmark}
+    \label{tab:my_label}
+\end{table}
+
+
+This benchmark uses \textbf{12} BLS12-381 scalar filed element as in put , and get a output element sequence of length \textbf{3}. Of which the first element is the hash result.
+
+A more detailed description is, the benched function "absorbs" the input elements \textbf{12} times, and "squeezes" an output of length \textbf{3}.
+
+Since the rate of Rescue is 3, take \textbf{3} field element as a input group, and straightly do a addition operation on \textbf{state}. That means the benched function do \textbf{4} permutations in total.
+
+\section{Discussion}
+
+\begin{enumerate}
+    \item The SNARK-based ATMS uses Jubjub for in-circuit elliptic curve operations since it provides efficient EC operations within the proof. Jubjub is s an elliptic curve of the twisted Edward's form:
+    $$E_{d}: -u^2 + v^2 = 1 + du^2v^2.$$
+    Define the Jubjub curve over the field $\mathbb{F}_q$ where $q$ is represented in hexadecimal as follows:
+    $$q = 0x73eda753299d7d483339d80809a1d80553bda402fffe5bfeffffffff00000001$$seSet the Jubjub curve as the embedded curve of BLS12-381.
+    Meaning that, Jubjub curve is defined over a prime which is also the prime that defines the scalar field of BLS12-381.
+
+
+    \item Since the we only want to get a commitment of public keys, there is "no need to of a merkle tree inside a SNARK, with a hash it is sufficient". So basically, $avk = H(pk_1, pk_2, ..., pk_n)$.
+
+    \item A little problem: The proof must include only threshold-many valid signatures even if the prover has more valid signatures.
+
+\end{enumerate}
+
+
+
+\end{document}

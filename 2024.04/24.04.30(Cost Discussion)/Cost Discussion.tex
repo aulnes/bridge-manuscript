@@ -1,0 +1,130 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{float}
+
+\title{24.04.30 Cost Discussion}
+\author{Xun Zhang \quad \quad Bingsheng Zhang \\ 
+Zhejiang University, CHN \\
+22221024@zju.edu.cn \quad bingsheng@zju.edu.cn}
+
+\date{April 30 2024}
+\begin{document}
+
+\maketitle
+
+\section{BLS cost(unfinished part from last week)}
+
+We also estimated the cost of various operations(mainly signature scheme) on the Cardano.
+
+The aggregate BLS signature schemes have two versions(or examples). Single key version has the same key and different messages, with public key over G1. This
+function returns a list of 10 messages \{'msg\_1', ..., 'msg\_10'\}, a public key 'pk', and an aggregate signature 'aggr\_sig'.
+
+Multi key version has same message, with public key over G2. This function returns a message 'msg', ten public keys '\{pk\_1,...,pk\_10\}', and an aggregate signature 'aggr\_sig'.
+
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{p{5cm}|p{2cm}|p{2.5cm}|p{2.5cm}} \hline
+         Operation& Script size & CPU usage& memory usage  \\ \hline
+         BLS Verification(G1)& 332  &    1,463,720,946   &  5754 \\ \hline
+         BLS Verification(G2)& 380  &    1,342,066,427   &  5754 \\ \hline
+         AggSig Verification(single key) &  777  &     3,336,910,422 &        71202   \\ \hline
+         AggSig Verification(multi key) & 1704  &    3,676,891,887          &430586   \\ \hline
+         Schnorr Verification(G1)  & 370   &     248,136,411   &          13796 \\ \hline
+         Schnorr Verification(G2)  & 514    &    493,212,089    &         13964 \\ \hline
+    \end{tabular}
+    \caption{Cost of signature verification on BLS12-381}
+    \label{tab:my_label}
+\end{table}
+
+and the cost of verifying a single BLS signature can be computed as follow(Note that there may be slight differences between the calculated results and the actual running results):
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{p{5cm}|p{4cm}} \hline
+         Funtion & Single BLS Verification\\ \hline
+         bls12\_381\_G1\_uncompress&  1 \\ \hline
+         bls12\_381\_G2\_uncompress&  1  \\ \hline
+         bls12\_381\_G2\_hashToCurve&  1 \\ \hline
+         bls12\_381\_GT\_millerLoop  & 2  \\ \hline
+         bls12\_381\_GT\_mul         & 0  \\ \hline
+         bls12\_381\_GT\_finalVerify & 1 \\ \hline
+         Total & 1,417,919,846 \\ \hline
+    \end{tabular}
+    \caption{BLS Verification Cost(over G1)}
+    \label{tab:my_label}
+\end{table}
+
+\section{Verification cost}
+review the cost of Groth16 proof verification and ATMS verification.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{p{5cm}|p{4cm}|p{4cm}} \hline
+         Funtion & Groth16 Verification & ATMS Verification  \\ \hline
+         bls12\_381\_G1\_uncompress&  4 & $N$ \\ \hline
+         bls12\_381\_G2\_uncompress&  4 & 0 \\ \hline
+         bls12\_381\_G1\_mul&  1 & 0 \\ \hline
+         bls12\_381\_G1\_add&  1 & $N+1$ \\ \hline
+         bls12\_381\_GT\_millerLoop  & 4 & 2 \\ \hline
+         bls12\_381\_GT\_mul         & 2 & 0 \\ \hline
+         bls12\_381\_GT\_finalVerify & 1 & 1 \\ \hline
+         blake2b\_256 & 0 &  $\log_2M *N$  \\ \hline
+         Total & 2,299,066,153 & 1,914,978,116
+         
+         ($M=100, N=34$) \\ \hline
+    \end{tabular}
+    \caption{Verification Cost}
+    \label{tab:my_label}
+\end{table}
+
+and we also use the data from Kenneth, to see how expensive to verify a original Plonk proof over Cardano. The number of operations required for a vanilla plonk verifier are (the numbering refers to each step of the verifier as in the original paper):
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{p{5cm}|p{4cm}} \hline
+         Funtion & Plonk Verification\\ \hline
+         bls12\_381\_G1\_uncompress&  16 \\ \hline
+         bls12\_381\_G2\_uncompress&  2  \\ \hline
+         bls12\_381\_G1\_mul&  17 \\ \hline
+         bls12\_381\_G1\_add&  20  \\ \hline
+         bls12\_381\_GT\_millerLoop  & 4  \\ \hline
+         bls12\_381\_GT\_mul         & 2  \\ \hline
+         bls12\_381\_GT\_finalVerify & 1 \\ \hline
+         blake2b\_256 & 6  \\ \hline
+         modular exponantiation & 1 \\ \hline
+         multiplyInteger &42 \\ \hline
+         divideInteger &1 \\ \hline
+         addInteger &14 \\ \hline
+         modInteger &2 \\ \hline
+         Total & 3,255,167,757 \\ \hline
+    \end{tabular}
+    \caption{Plonk Verification Cost}
+    \label{tab:my_label}
+\end{table}
+
+
+And this version of Plonk is based on KZG polynomial commitment, which is also used in Halo2 proof system(to reduce the verification cost).
+
+\textbf{In conclusion}, verifying the cost of Plonk proof is about 40\% higher than verifying a Groth16 proof over Cardano. 
+
+Combine the zero knowledge proofs with signature scheme. 
+Imagine a sufficiently simple (but not practical) scenario: using Halo2/Groth16 to prove the correctness of aggregation and straightly verify BLS signature. And we show the cost of various possible approaches:
+
+
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{p{1.5cm}|p{2cm}|p{2cm}|p{2cm}|p{4cm}} \hline
+          & Plonk(Halo2)&Plonk(Halo2) + BLS & Plonk(Halo2) + Groth16 & Plonk(Halo2) + Groth16 + BLS\\ \hline
+          CPU cost & 3255M & 4672M & 2299M & 3716M \\ \hline
+         
+    \end{tabular}
+    \caption{Bridge Scheme Verification Cost}
+    \label{tab:my_label}
+\end{table}
+
+Note that the results are calculated by hand, which may differ from the actual situation.
+
+
+\end{document}

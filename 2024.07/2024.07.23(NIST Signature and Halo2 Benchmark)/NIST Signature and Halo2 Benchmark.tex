@@ -1,0 +1,173 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{hyperref}
+
+\title{24.07.23 NIST Signature and Halo2 Benchmark}
+\author{Xun Zhang \quad \quad Bingsheng Zhang \\ 
+Zhejiang University, CHN \\
+22221024@zju.edu.cn \quad bingsheng@zju.edu.cn}
+
+\date{July 23 2024}
+\begin{document}
+
+\maketitle
+\section{NIST Multi-party Threshold Cryptography}
+
+NIST is calling for Multi-Party Threshold Schemes, see \textbf{NIST IR 8214C (Initial Public Draft), NIST First Call for Multi-Party Threshold Schemes.} https://csrc.nist.gov/pubs/ir/8214/c/ipd.
+\href{https://csrc.nist.gov/pubs/ir/8214/c/ipd}{NIST}
+
+Below is the overview of Multi-Party Threshold Cryptography MPTC,
+see https://csrc.nist.rip/Projects/threshold-cryptography:
+\href{https://csrc.nist.rip/Projects/threshold-cryptography}{MPTC}
+
+
+The multiparty paradigm of threshold cryptography enables a secure distribution of trust in the operation of cryptographic primitives. This can apply, for example, to the operations of key generation, signing, encryption and decryption.
+
+This project focuses on threshold schemes for cryptographic primitives: using a “secret sharing” mechanism, the secret key is split across multiple "parties", such that, even if some (up to a threshold f out of n) of these parties are corrupted, the key secrecy remains uncompromised, even during the cryptographic operation that depends on the key. This approach can be used to distribute trust across various operators, and is also useful to avoid various single-points of failure in the implementation.
+
+The multi-party threshold cryptography project will consider devising guidelines and recommendations pertinent to threshold schemes that are interchangeable (in the sense of NISTIR 8214A, Section 2.4) with ECDSA signing, EdDSA signing, RSA signing and decryption, and AES encryption/decryption, and their respective distributed key-generation. For example, a signature produced by a threshold scheme should be verifiable by the same algorithm as used for conventional signatures.
+
+
+\section{Discussion about Schnorr}
+
+Most contents is from the slides \textit{'Recent Developments on Multi-Party Schnorr Signatures'} of Elizabeth Crites, University of Edinburgh.(Nov. 24, 2022).
+see https://elizabeth-crites.github.io/london\_crypto\_day.pdf
+\href{https://elizabeth-crites.github.io/london_crypto_day.pdf}{Schnorr}
+
+\subsection{Why Schnorr?}
+
+\begin{itemize}
+    \item RSA, ECDSA, EdDSA (Aug.’22) standardized through NIST.
+    \item EdDSA is deterministic version of Schnorr.
+    \item RSA signatures are large (~6x ECDSA/EdDSA).
+    \item ECDSA requires nonce inversion and other complexities. And no security reduction like Schnorr -> DL + ROM.
+    \item BLS requires bilinear pairings (no NIST standardization).
+    
+\end{itemize}
+
+\subsection{Why Now?}
+
+\begin{itemize}
+    \item Bitcoin moved from ECDSA to Schnorr (Nov.’21).
+    \item MuSig2 [NRS21] / FROST [KG20] proposed to secure cryptocurrency wallets.
+    \item FROST IETF draft [CKGW22], 9+ implementations.
+    \item NIST call for threshold EdDSA/Schnorr threshold signatures [BD22]. EdDSA not verifiably deterministic so Schnorr can be used instead.
+\end{itemize}
+
+
+\subsection{Threshold Schnorr}
+
+The terminology 'Threshold' here is for such scenario: there is only \textbf{ONE} public key, and the holder will use Shamir method to secret-share the private key.
+And also the nonce \textbf{r}.
+And finally it will collect all the signatures and verify the threshold schnorr signature.
+
+
+So this setting is different from what we want(many signers holds their own pk/sk).
+
+
+\section{Schnorr Multi-signature with Merkle Tree}
+
+We implemented the Schnorr multi-signature scheme with a Merkle Tree, which is used for membership-proof.
+The workflow is same as we describe in the last week slides, we replace the encode method with a merkle tree root:
+
+$a_i = H(L || X_i)$ for all $X_i$, where $L = ROOT(X_1, X_2, ... , X_n, NX_1, NX_2, ... , NX_m)$
+
+Then we prove that all the public keys we used to produce aggregated public key is a member of this Merkle Tree(corresponding to this merkle root).
+
+Follwing is the results of proving time:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{c|c} \hline
+        Setting & Proving Time \\ \hline
+         k = 14, 8\_of\_16& 1.4335s  \\ \hline
+         k = 15, 16\_of\_32& 2.4763s \\ \hline
+         k = 16, 32\_of\_64& 4.5464s \\ \hline
+         k = 18, 64\_of\_128& 16.384s \\ \hline
+         k = 19, 128\_of\_256& 31.089s \\ \hline
+    \end{tabular}
+    \caption{Proving time of Schnorr Multi-signature with Merkle Tree}
+    \label{tab:my_label}
+\end{table}
+
+For example, \textbf{8} is the number of public keys participate in the signing phase, and \textbf{16} is the number pf whole public key set, which is commited as a merkle tree root.
+
+
+
+
+
+\section{Signature Scheme behind the top cryptocurrencies}
+
+
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{c|c}
+        Signature Scheme & Crypto \\ \hline
+        Schnorr& Bitcoin \\ \hline
+        EdDSA & XRP, Cardano, Stellar, Monero, Cosmos \\ \hline
+        ECDSA & Ethereum, XRP, Litecoin, Binance Coin, Tron \\ \hline
+        ERC20 & USDT, Chainlink, USD Coin, OKB\\ \hline
+        BLS & Ethereum 2.0, Cardano \\ \hline 
+    \end{tabular}
+    \caption{Siganture Scheme behind the top cryptocurrencies}
+    \label{tab:my_label}
+\end{table}
+
+
+
+\section{BLS Multi-signature}
+
+
+We benchmarked the BLS Multi-signature implementation in the halo2-lib, with public key aggregation, but not hash function(which means we use a random input as msghash value).
+
+And the halo2-lib crate use two-time pairing(one is inside the halo2-lib, the other is a outer implementation) to illustrate the correctness of (their)pairing. So it can be optimized in further.
+
+Here are the results:
+\begin{table}[H]
+    \centering
+    \begin{tabular}{p{1cm}|p{1cm}|p{1cm}|p{3cm}|p{1.5cm}|p{1.5cm}|p{2cm}} \hline
+          degree&advice&lookup&num\_aggregation&proof\_time&proof\_size&verify\_time \\ \hline
+17&25&3&2&17.4515s&11520	&72.7712ms \\ \hline
+17&25&3&20&18.5408s	&12224&	73.2885ms\\ \hline
+17&25&3&200&22.3638s&15008&	89.0890ms\\ \hline
+17&25&3&2000&67.0237s&45952	&286.8686ms\\ \hline
+17&25&3&4000&116.4392s&79680&327.1002ms\\ \hline
+17&25&3&6000&165.0348s&113760&551.4775ms\\ \hline
+17&25&3&8000&210.1191s&147840&664.9270ms\\ \hline
+17&25&3&10000&256.9934s&181920&841.5073ms\\ \hline
+    \end{tabular}
+    \caption{Bn254 BLS Multi-Signature Verification Cost}
+    \label{tab:my_label}
+\end{table}
+
+
+This result is running on a linux server. With a Intel Xeon Silver 4241(48cores) @3.200GHz, and 128G RAM, Ubuntu 20.04.6 LTS.
+
+
+
+\section{A Brief Conclusion about Signatures in Halo2}
+
+Here we list some benchmark results of various signatures. Note that the performance are under different settings(even code).
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{c|c|c} \hline
+         Signature& curve& Proving Time   \\ \hline
+         EDDSA& ed25519 & 10.1348s \\ \hline
+         ECDSA& secp256k1&3.5269s \\ \hline
+         Schnorr& BLS/Jubjub & ~0.4s\\ \hline
+         BLS & Bn254 & 20.4768s \\ \hline
+    \end{tabular}
+    \caption{Caption}
+    \label{tab:my_label}
+\end{table}
+
+By the way, if we implement(have implemented actually) the\textbf{ EdDSA} signature in Inigo's code('sidechains-zk'), it is also very fast. Because the verification process is totally same as Schnorr signature.
+
+
+
+\end{document}

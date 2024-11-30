@@ -1,0 +1,112 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{amsfonts}
+\usepackage{bm}
+\usepackage{amsmath}
+\usepackage{booktabs}
+
+\title{24.11.05 Merkle Tree with Selector}
+\author{Xun Zhang \quad \quad Wuyun Siqin \quad \quad Bingsheng Zhang \\ 
+Zhejiang University, CHN \\
+22221024@zju.edu.cn \quad 3210101763@zju.edu.cn \quad bingsheng@zju.edu.cn}
+
+\date{November 5 2024}
+
+\begin{document}
+
+\maketitle
+
+\section{Merkle Tree with Selector}
+
+In our previous implementation, there is no selector in the circuit. Which means that we "swap" the inputs fo Poseidon hash function manually.
+
+In this version, the $\mathsf{index}$ of each public key has not been imported as a witness.
+
+So we add the this part of constraint into the circuit:
+
+\begin{itemize}
+    \item $\mathsf{left} = gate.select(\mathsf{hash, path_i, index_i})$
+    \item $\mathsf{right} = gate.select(\mathsf{path_i, hash, index_i})$
+    \item $\mathsf{inputs = [left, right]}$
+    \item $\mathsf{hash} = poseidon.hash(\mathsf{inputs})$
+\end{itemize}
+
+And we need the $\mathsf{index}$ value to do the later implementation.
+
+
+\section{Benchmark}
+
+We also benchmark the new version of merkle tree.
+
+Here is the benchmark results:
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+\textbf{degree}    & \textbf{num\_aggregation} & \textbf{num\_origin} & \textbf{proof\_time} & \textbf{proof\_size} & \textbf{verify\_time} \\ \hline
+19   & 16 & 32 & 5.6890s & 704 & 6.5756ms \\ \hline
+19   & 32 & 64 & 7.6071s & 1056 & 4.4714ms \\ \hline
+19    & 64 & 128 & 13.4401s & 2112 & 7.6402ms \\ \hline
+19   & 128 & 256 & 23.2960s & 3872 & 8.1395ms \\ \hline
+19   & 256 & 512 & 48.6304s & 8448 & 11.6570ms \\ \hline
+19    & 512 & 1024 & 100.0534s & 17600 & 13.6171ms \\ \hline
+19    & 1024 & 2048 & 213.2567s & 38016 & 20.3142ms \\ \hline
+\end{tabular}
+\caption{Merkle Tree Path Benchmark with stake}
+\label{tab:data_table}
+\end{table}
+
+The benchmark results shows that the merkle path with selector takes about $5\%$ to $8\%$ longer proving time than previous version.
+
+\section{Relations of Index}
+
+There is another relation that we have not discussed before, that is the unequal relationship between indexes.
+\begin{itemize}
+    \item $\forall i : \mathsf{index}_i \leq m$ and $\forall i \neq j : \mathsf{index}_i \neq \mathsf{index}_j$.
+\end{itemize}
+
+It maybe be difficult to prove, because we need the boolean value of every path's indexes, but in the mithril, the index is a integer. We plan to prove it in following circuit:
+
+\begin{itemize}
+    \item $\mathsf{index\_bigint} = gate.bit\_composition(\mathsf{index[]})$
+    \item $0 = gate.equal(\mathsf{index\_bigint_i,index\_bigint_j})$
+\end{itemize}
+
+Or to prove it as:
+
+\begin{itemize}
+    \item $\mathsf{index[]} = gate.bit\_decomposition(\mathsf{index\_bigint})$
+    \item $0 = gate.equal(\mathsf{index\_bigint_i,index\_bigint_j})$
+\end{itemize}
+
+We will adjust the proving logic according to the engineering practice.
+
+
+
+\section{Discussion About $\phi(\mathsf{stake})$ In the Merkle Tree}
+
+We mentioned that we can optimize the merkle tree by replacing the $\mathsf{stake}$ by $\phi(\mathsf{stake})$. 
+
+However, $ev$ is a natural in [0,$2^{512}$], while $\phi$ is a floating point in [0, 1]. It is hard to represent a float number in circuit. How to address this problem ?
+
+This is the original code implementation in Mithril:
+
+\begin{itemize}
+    \item $w = \mathsf{stake_i} / \mathsf{total\_stake}$
+    \item $p < 1 - (1 - \phi_f)^w, with\quad p = ev / 2^{512}$.
+    \item let $q = 1 / (1 - p) \quad and\quad c = ln(1 - \phi_f)$
+    \item $q < exp(-w * c)$
+\end{itemize}
+
+And they use Taylor expansion to compare the two values, iterate 1000 times. Note that $q$ and  $exp(-w * c)$ are all float numbers.
+
+
+We try to modify the comparison process into a integer version, still need discussion and investigation. Or we can just use a simple comparison:
+
+\begin{itemize}
+    \item For $i \in \{1 \dots k\}$: $ev_i \leq \phi(\mathsf{stake}_i)$.
+\end{itemize}
+
+But it seems different from the original code implementation.
+
+\end{document}

@@ -1,0 +1,101 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+
+
+\usepackage{amsfonts}
+\usepackage{bm}
+\usepackage{amsmath}
+\usepackage{booktabs}
+
+\title{24.11.19 Merkle Tree Opening Benchmark}
+\author{Xun Zhang \quad \quad Wuyun Siqin \quad \quad Bingsheng Zhang \\ 
+Zhejiang University, CHN \\
+22221024@zju.edu.cn \quad 3210101763@zju.edu.cn \quad bingsheng@zju.edu.cn}
+
+\date{November 19 2024}
+
+\begin{document}
+
+\maketitle
+
+\section{Merkle Tree Root Benchmark}
+
+We implemented the whole Merkle tree root circuit, that is, given a vector of members, proving the Merkle tree root is correctly computed by all the leaf nodes(members).
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+\textbf{degree}    & \textbf{num}  & \textbf{proof\_time} & \textbf{proof\_size} & \textbf{verify\_time} \\ \hline
+19    & 32 & 5.9280s & 704 & 5.8417ms \\ \hline
+19    & 64 & 7.8385s & 1056 & 4.8113ms \\ \hline
+19     & 128 & 9.7901s & 1408 & 10.0684ms \\ \hline
+19    & 256 & 13.9924s & 2112 & 7.8568ms \\ \hline
+19    & 512 & 22.4310s & 3520 & 9.3348ms \\ \hline
+19    & 1024 & 40.6768s & 6688 & 8.6423ms \\ \hline
+19     & 2048 & 77.2907s & 13024 & 11.2679ms \\ \hline
+19     & 4096 & 147.1965s & 25344 & 17.7845ms \\ \hline
+\end{tabular}
+\caption{Merkle Tree Root Benchmark}
+\label{tab:data_table}
+\end{table}
+
+We also list the benchmark results of the normal opening method of Merkle tree(by providing Merkle tree path).
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+\textbf{degree}    & \textbf{num\_aggregation} & \textbf{num\_origin} & \textbf{proof\_time} & \textbf{proof\_size} & \textbf{verify\_time} \\ \hline
+19   & 16 & 32 & 5.6890s & 704 & 6.5756ms \\ \hline
+19   & 32 & 64 & 7.6071s & 1056 & 4.4714ms \\ \hline
+19    & 64 & 128 & 13.4401s & 2112 & 7.6402ms \\ \hline
+19   & 128 & 256 & 23.2960s & 3872 & 8.1395ms \\ \hline
+19   & 256 & 512 & 48.6304s & 8448 & 11.6570ms \\ \hline
+19    & 512 & 1024 & 100.0534s & 17600 & 13.6171ms \\ \hline
+19    & 1024 & 2048 & 213.2567s & 38016 & 20.3142ms \\ \hline
+\end{tabular}
+\caption{Merkle Tree Path Benchmark with stake}
+\label{tab:data_table}
+\end{table}
+
+
+\section{Shuffle Argument in Halo2}
+
+We also benchmark the shuffle argument in the halo2, this circuit is the official imlpementation of shuffling.
+
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+\textbf{degree}    & \textbf{vector\_length}  & \textbf{tuple\_length}& \textbf{proof\_time} & \textbf{proof\_size} & \textbf{verify\_time} \\ \hline
+14   & 1024 & 2 & 0.3576s & 608 & 4.7292ms \\ \hline
+15   & 1024 & 2 & 0.6210s & 608 & 4.7848ms \\ \hline
+14   & 2048 & 2 & 1.1507s & 608 & 5.0151ms \\ \hline
+15   & 2048 & 2 & 1.9449s & 608 & 6.9806ms \\ \hline
+14   & 4096 & 2 & 1.1578s & 608 & 6.3846ms \\ \hline
+15   & 2048 & 2 & 2.1004s & 608 & 5.5532ms \\ \hline
+14   & 1024 & 3 & 1.3217s & 736 & 4.9721ms \\ \hline
+15   & 1024 & 3 & 2.1634s & 736 & 5.0851ms \\ \hline
+14   & 2048 & 3 & 1.3509s & 736 & 10.3736ms \\ \hline
+15   & 2048 & 3 & 2.3449s & 736 & 6.6278ms \\ \hline
+14   & 4096 & 3 & 1.3925s & 736 & 6.6628ms \\ \hline
+15   & 4096 & 3 & 2.4891s & 736 & 7.0279ms \\ \hline
+\hline
+\end{tabular}
+\caption{Shuffle Benchmark}
+\label{tab:data_table}
+\end{table}
+
+
+Where vector\_length is the length of the set we want to prove the relations, and the tuple\_length is the length of a tuple in the set.
+
+For example, the length of tuple $(pk_i, \mathsf{stake}_i)$ is 2.
+
+Note that when the vector\_length is biggner than 1024, the program will meet a stack overflow in the layouter.assign\_region function. Add RUST\_MIN\_STACK=16777216 before your command to solve it.
+
+
+
+
+\end{document}

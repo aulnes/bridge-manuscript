@@ -1,0 +1,78 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+
+\title{24.12.03 Merkle Path with Different Opening Number}
+\author{Xun Zhang \quad \quad Wuyun Siqin \quad \quad Bingsheng Zhang \\ 
+Zhejiang University, CHN \\
+22221024@zju.edu.cn \quad 3210101763@zju.edu.cn \quad bingsheng@zju.edu.cn}
+\date{December 3 2024}
+
+\begin{document}
+
+\maketitle
+
+\section{Merkle Path with Selector}
+
+We have benchmarked the Merkle path circuit with selector, and the opening number of Merkle tree is half of total leaf nodes.
+
+This time we benchmarked various numbers of opening nodes, the results is like following:
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+\textbf{degree}    & \textbf{num\_aggregation} & \textbf{num\_origin} & \textbf{proof\_time} & \textbf{proof\_size} & \textbf{verify\_time} \\ \hline
+
+19    & 64 & 1024 & 17.9436s &2816& 8.5181ms \\ \hline
+19   & 128 & 1024 & 29.7951s &4928&8.4833ms \\ \hline
+19   & 256 & 1024 & 56.6890s &9152&10.1941ms \\ \hline
+19   & 512 & 1024 & 103.6901s&17600&13.5464ms \\ \hline
+19   & 768 & 1024 & 162.6483s&26048&36.4137ms
+ \\ \hline
+\end{tabular}
+\caption{Merkle Tree Path 1024 Benchmark}
+\label{tab:data_table}
+\end{table}
+
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+\textbf{degree}    & \textbf{num\_aggregation} & \textbf{num\_origin} & \textbf{proof\_time} & \textbf{proof\_size} & \textbf{verify\_time} \\ \hline
+
+
+19   & 128 & 2048 & 44.2524s&5280&8.9935ms \\ \hline
+19   & 256 & 2048 & 61.4681s&9856&10.9770ms \\ \hline
+19   & 512 & 2048 & 113.1540s&19360&15.5076ms \\ \hline
+19   & 1024 & 2048 & 222.6445s&38016&24.4505ms \\ \hline
+19   & 1536 & 2048 & 328.6864s&56672&34.4368ms \\ \hline
+\end{tabular}
+\caption{Merkle Tree Path 2048 Benchmark}
+\label{tab:data_table}
+\end{table}
+
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+\textbf{degree}    & \textbf{num\_aggregation} & \textbf{num\_origin} & \textbf{proof\_time} & \textbf{proof\_size} & \textbf{verify\_time} \\ \hline
+19   & 256 & 4096 & 60.8389s&10560&44.3780ms \\ \hline
+19   & 512 & 4096 & 115.4392s&20768&14.6929ms \\ \hline
+19   & 1024 & 4096 & 234.0109s&40832&22.1103ms \\ \hline
+19   & 2048 & 4096 & 459.3131s&81312&35.0787ms \\ \hline
+19   & 3072 & 4096 & 692.4101s&121792&51.12153ms \\ \hline
+\end{tabular}
+\caption{Merkle Tree Path 4096 Benchmark}
+\label{tab:data_table}
+\end{table}
+
+
+
+Note that this circuit does not include the constraints of index, so the actual proving will be longer than results in the table.
+
+
+
+
+\end{document}
